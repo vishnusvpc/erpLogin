@@ -3,8 +3,14 @@ using System.Data.SqlClient;
 
 namespace erpLogin.Repository
 {
-    public class LeadReg
+    public interface ILeadReg
     {
+        Task<string> RegisterLead(LeadRegister registration);
+    }
+
+    public class LeadReg : ILeadReg
+    {
+       
         private readonly IConfiguration _configuration;
         public LeadReg(IConfiguration configuration)
         {
@@ -19,8 +25,20 @@ namespace erpLogin.Repository
                 await connection.OpenAsync();
                 SqlCommand cmd = new SqlCommand("Upsertlead",connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@LeadName",registration.)
+                cmd.Parameters.AddWithValue("@Id", registration.Id ?? (object)DBNull.Value );
+                cmd.Parameters.AddWithValue("@LeadName", registration.LeadName);
+                cmd.Parameters.AddWithValue("@LeadMobileNo", registration.LeadMobileNo);
+                cmd.Parameters.AddWithValue("@LeadAddress", registration.LeadAddress);
+                cmd.Parameters.AddWithValue("@LeadEmail", registration.LeadEmail);
+                cmd.Parameters.AddWithValue("@HighLevelRequirement", registration.HighLevelRequirement);
+                cmd.Parameters.AddWithValue("@Locations", registration.Location);
+                cmd.Parameters.AddWithValue("@LeadStatus", registration.LeadStatus);
+                cmd.Parameters.AddWithValue("@Remarks", registration.Remarks);
+
+                 await cmd.ExecuteNonQueryAsync();
+                return "Successfully inserted";
             }
+            
         }
     }
 

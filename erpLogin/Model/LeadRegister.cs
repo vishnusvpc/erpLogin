@@ -4,6 +4,7 @@ namespace erpLogin.Model
 {
     public class LeadRegister
     {
+        public string? Id { get; set; }
         [Required]
         public string LeadName { get; set; }
         [Required]
